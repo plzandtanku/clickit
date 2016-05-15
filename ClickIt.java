@@ -70,12 +70,12 @@ public class ClickIt{
 	public static void main(String[] args) throws InterruptedException{
 		//LocalTime test = LocalTime.now();
 		//Thread.sleep(5000);
-	//	LocalTime test2 = LocalTime.now();
-//long minutes = ChronoUnit.SECONDS.between(test, test2);
-//System.out.println(minutes);
-//if (1>0){
-//return;
-//}
+		//	LocalTime test2 = LocalTime.now();
+		//long minutes = ChronoUnit.SECONDS.between(test, test2);
+		//System.out.println(minutes);
+		//if (1>0){
+		//return;
+		//}
 		startMenu();
 	}
 	
