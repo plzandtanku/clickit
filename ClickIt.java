@@ -33,7 +33,7 @@ public class ClickIt{
 	public static void endGame(){
 		endTime = LocalTime.now();
 		long seconds = ChronoUnit.SECONDS.between(startTime, endTime);
-		System.out.format("It took you %d seconds to click all the buttons. Wow, that is awful", seconds);
+		System.out.format("It took you %d seconds to click all the buttons.", seconds);
 	}
 	public static void generateButton(){
 		if (count >= 2){
@@ -68,14 +68,6 @@ public class ClickIt{
 		frame.setVisible(true);
 	}
 	public static void main(String[] args) throws InterruptedException{
-		//LocalTime test = LocalTime.now();
-		//Thread.sleep(5000);
-		//	LocalTime test2 = LocalTime.now();
-		//long minutes = ChronoUnit.SECONDS.between(test, test2);
-		//System.out.println(minutes);
-		//if (1>0){
-		//return;
-		//}
 		startMenu();
 	}
 	
