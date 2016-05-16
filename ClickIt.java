@@ -4,10 +4,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.time.*;
 import java.time.temporal.*;
+import java.io.*;
 public class ClickIt{
 	public static int count = 0;
 	public static LocalTime startTime;
 	public static LocalTime endTime;
+	public static String savefile = "clickit_highscores.txt";
+	public static long current_highscore = 0;
+	
 	public static void startMenu(){
 		JFrame frame = new JFrame("Click It!");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,7 +37,47 @@ public class ClickIt{
 	public static void endGame(){
 		endTime = LocalTime.now();
 		long seconds = ChronoUnit.SECONDS.between(startTime, endTime);
-		System.out.format("It took you %d seconds to click all the buttons.", seconds);
+		boolean updated = updateHighScore(seconds);
+		String result = String.format("It took you approximately %d seconds to click all the buttons.", seconds);
+		result += updated ? "\nYou've achieved a new high score!"  : "";
+		result += String.format("\n The current high score is %d", current_highscore);
+		JFrame frame = new JFrame("Game Over");
+		JPanel p = new JPanel(new FlowLayout());
+		
+		JTextPane jp = new JTextPane();
+		jp.setEditable(false);
+		jp.setText(result);
+		
+		Button button = new Button("Quit");
+		button.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				frame.dispose();
+			}
+		});
+		p.add(jp);
+		p.add(button);
+		p.setPreferredSize(p.getPreferredSize());
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLayout(new BorderLayout());
+		frame.add(p, BorderLayout.CENTER);
+		frame.pack();
+		frame.setLocation(500,500);
+		frame.setVisible(true);
+	}
+	public static boolean updateHighScore(long score){
+		try{
+			if (current_highscore < score){
+				return false;
+			}
+			BufferedWriter bf = new BufferedWriter(new FileWriter(new File(savefile)));
+			bf.write(Long.toString(score));
+			bf.flush();
+			return true;
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		return false;
 	}
 	public static void generateButton(){
 		if (count >= 2){
@@ -67,7 +111,20 @@ public class ClickIt{
 		frame.setLocation(x,y);
 		frame.setVisible(true);
 	}
-	public static void main(String[] args) throws InterruptedException{
+	public static void main(String[] args){
+		try {
+			File file = new File(savefile);
+			if (file.isFile()){
+				Scanner sc = new Scanner(file);
+				current_highscore = sc.nextLong();
+			}
+		}
+		catch (InputMismatchException e){
+			System.err.println("Malformed clickit_highscores file. I suggest deleting it");
+		}		
+		catch (Exception e){
+			e.printStackTrace();
+		}
 		startMenu();
 	}
 	
