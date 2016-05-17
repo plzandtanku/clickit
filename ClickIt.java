@@ -19,7 +19,6 @@ public class ClickIt{
 		Button button = new Button("Start Game");
 		button.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				startTime = LocalTime.now();
 				launchGame();
 				frame.dispose();
 			}
@@ -31,6 +30,8 @@ public class ClickIt{
 		frame.setVisible(true);
 	}
 	public static void launchGame(){
+		count = 0;
+		startTime = LocalTime.now();
 		generateButton();
 		System.out.println("done");
 	}
@@ -42,8 +43,8 @@ public class ClickIt{
 		result += updated ? "\nYou've achieved a new high score!"  : "";
 		result += String.format("\n The current high score is %d", current_highscore);
 		JFrame frame = new JFrame("Game Over");
-		JPanel p = new JPanel(new FlowLayout());
-		
+		JPanel p = new JPanel(new GridLayout(0,1));
+		JPanel p2 = new JPanel(new GridLayout(0,2));
 		JTextPane jp = new JTextPane();
 		jp.setEditable(false);
 		jp.setText(result);
@@ -54,9 +55,18 @@ public class ClickIt{
 				frame.dispose();
 			}
 		});
+		
+		Button button2 = new Button("Play Again");
+		button2.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				launchGame();
+				frame.dispose();
+			}
+		});
 		p.add(jp);
-		p.add(button);
-		p.setPreferredSize(p.getPreferredSize());
+		p2.add(button2);
+		p2.add(button);
+		p.add(p2);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 		frame.add(p, BorderLayout.CENTER);
