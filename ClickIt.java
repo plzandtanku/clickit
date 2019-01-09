@@ -51,7 +51,7 @@ public class ClickIt{
 			public void mouseExited(MouseEvent e){}
 			public void mousePressed(MouseEvent e){
 				count++;
-				generateButton(frame, rand);
+				moveButton(frame, rand);
 			//	frame.dispose();
 			}
 			public void mouseReleased(MouseEvent e){}
@@ -62,7 +62,7 @@ public class ClickIt{
 		frame.setSize(100,100);
 		frame.setVisible(true);
 		startTime = LocalTime.now();
-		generateButton(frame, rand);
+		moveButton(frame, rand);
 		System.out.println("done");
 	}
 	public static void endGame(){
@@ -119,7 +119,7 @@ public class ClickIt{
 		}
 		return false;
 	}
-	public static void generateButton(JFrame frame, Random rand){
+	public static void moveButton(JFrame frame, Random rand){
 		if (count >= endCount){
 			endGame();
 			frame.dispose();
