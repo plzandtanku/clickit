@@ -7,6 +7,12 @@ import java.time.temporal.*;
 import java.io.*;
 public class ClickIt{
 	public static int count = 0;
+	public static int endCount = 10;
+	public static int prevX = 0;
+	public static int prevY = 0;
+	public static int max_width = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
+	public static int max_height = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+
 	public static LocalTime startTime;
 	public static LocalTime endTime;
 	public static String savefile = "clickit_highscores.txt";
@@ -16,6 +22,7 @@ public class ClickIt{
 		JFrame frame = new JFrame("Click It!");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel p = new JPanel(new BorderLayout());
+		JLabel title = new JLabel("Number of buttons to click: "+ endCount);
 		Button button = new Button("Start Game");
 		button.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
@@ -24,6 +31,7 @@ public class ClickIt{
 			}
 		});
 		p.add(button);
+		p.add(title, BorderLayout.NORTH);
 		frame.setContentPane(p);
 		frame.setSize(200,200);
 		frame.setLocation(500,500);
@@ -31,8 +39,30 @@ public class ClickIt{
 	}
 	public static void launchGame(){
 		count = 0;
+		// initialize the starting button
+		Random rand = new Random();
+		JFrame frame = new JFrame("Click It!");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JPanel p = new JPanel(new BorderLayout());
+		Button button = new Button("Click here!");
+		button.addMouseListener(new MouseListener(){
+			public void mouseClicked(MouseEvent e){}
+			public void mouseEntered(MouseEvent e){}
+			public void mouseExited(MouseEvent e){}
+			public void mousePressed(MouseEvent e){
+				count++;
+				generateButton(frame, rand);
+			//	frame.dispose();
+			}
+			public void mouseReleased(MouseEvent e){}
+			
+		});
+		p.add(button);
+		frame.setContentPane(p);
+		frame.setSize(100,100);
+		frame.setVisible(true);
 		startTime = LocalTime.now();
-		generateButton();
+		generateButton(frame, rand);
 		System.out.println("done");
 	}
 	public static void endGame(){
@@ -89,37 +119,20 @@ public class ClickIt{
 		}
 		return false;
 	}
-	public static void generateButton(){
-		if (count >= 2){
+	public static void generateButton(JFrame frame, Random rand){
+		if (count >= endCount){
 			endGame();
+			frame.dispose();
 			return;
 		}
-		JFrame frame = new JFrame("Click It!");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		JPanel p = new JPanel(new BorderLayout());
-		Button button = new Button("Click here!");
-		button.addMouseListener(new MouseListener(){
-			public void mouseClicked(MouseEvent e){
-				count++;
-				generateButton();
-				frame.dispose();
-			}
-			public void mouseEntered(MouseEvent e){}
-			public void mouseExited(MouseEvent e){}
-			public void mousePressed(MouseEvent e){}
-			public void mouseReleased(MouseEvent e){}
-			
-		});
-		p.add(button);
-		frame.setContentPane(p);
-		int max_width = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
-		int max_height = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
-		Random rand = new Random();
+
 		int x = rand.nextInt(max_width-100);
 		int y = rand.nextInt(max_height-100);
-		frame.setSize(100,100);
+		while (prevX == x && prevY == y) x = rand.nextInt(max_height-100);
+		prevX = x; prevY = y;
+	//	frame.setSize(100,100);
 		frame.setLocation(x,y);
-		frame.setVisible(true);
+		//frame.setVisible(true);
 	}
 	public static void main(String[] args){
 		try {
