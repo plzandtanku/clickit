@@ -6,6 +6,7 @@ import java.time.*;
 import java.time.temporal.*;
 import java.io.*;
 public class ClickIt{
+	// set initial values here
 	public static int count = 0;
 	public static int endCount = 10;
 	public static int prevX = 0;
@@ -18,6 +19,9 @@ public class ClickIt{
 	public static String savefile = "clickit_highscores.txt";
 	public static long current_highscore = 0;
 	
+	/**
+	* startMenu - handle the start menu display
+	**/
 	public static void startMenu(){
 		JFrame frame = new JFrame("Click It!");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,6 +41,10 @@ public class ClickIt{
 		frame.setLocation(500,500);
 		frame.setVisible(true);
 	}
+
+	/*
+	* launches the game. provides initial button
+	*/
 	public static void launchGame(){
 		count = 0;
 		// initialize the starting button
@@ -63,11 +71,34 @@ public class ClickIt{
 		frame.setVisible(true);
 		startTime = LocalTime.now();
 		moveButton(frame, rand);
-		System.out.println("done");
 	}
+
+	/*
+	* generate different button location
+	*/
+	public static void moveButton(JFrame frame, Random rand){
+		if (count >= endCount){
+			endGame();
+			frame.dispose();
+			return;
+		}
+
+		int x = rand.nextInt(max_width-100);
+		int y = rand.nextInt(max_height-100);
+		while (prevX == x && prevY == y) x = rand.nextInt(max_height-100);
+		prevX = x; prevY = y;
+	//	frame.setSize(100,100);
+		frame.setLocation(x,y);
+		//frame.setVisible(true);
+	}
+
+	/*
+	* End the game. Get end game score
+	*/
 	public static void endGame(){
 		endTime = LocalTime.now();
 		long seconds = ChronoUnit.SECONDS.between(startTime, endTime);
+		// TODO: need to handle saving the high score
 		boolean updated = updateHighScore(seconds);
 		String result = String.format("It took you approximately %d seconds to click all the buttons.", seconds);
 		result += updated ? "\nYou've achieved a new high score!"  : "";
@@ -104,6 +135,10 @@ public class ClickIt{
 		frame.setLocation(500,500);
 		frame.setVisible(true);
 	}
+
+	/*
+	* file saving
+	*/
 	public static boolean updateHighScore(long score){
 		try{
 			if (current_highscore < score){
@@ -119,21 +154,7 @@ public class ClickIt{
 		}
 		return false;
 	}
-	public static void moveButton(JFrame frame, Random rand){
-		if (count >= endCount){
-			endGame();
-			frame.dispose();
-			return;
-		}
 
-		int x = rand.nextInt(max_width-100);
-		int y = rand.nextInt(max_height-100);
-		while (prevX == x && prevY == y) x = rand.nextInt(max_height-100);
-		prevX = x; prevY = y;
-	//	frame.setSize(100,100);
-		frame.setLocation(x,y);
-		//frame.setVisible(true);
-	}
 	public static void main(String[] args){
 		try {
 			File file = new File(savefile);
